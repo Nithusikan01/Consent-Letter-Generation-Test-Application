@@ -116,6 +116,9 @@ Pulp -> nerve
 
 Infected pulp -> damaged nerve tissue
 
+
+Finally, The final letter must contain Same clinical facts, same clinical meaning, same tooth information, same treatment status, same consent status - expressed in simpler language.
+
 Tone:
 
  Warm, professional, and reassuring. Use clear, neutral phrasing that inspires trust.
