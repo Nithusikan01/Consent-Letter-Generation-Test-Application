@@ -2,7 +2,7 @@ import axios from 'axios'
 import { apiClient } from './client'
 import type { FeedbackData, GenerateLetterRequest, GenerateLetterResponse, LetterFormValues } from '../types'
 
-const GENERATE_LETTER_PATH = '/api/v2/test/generate-patient-letter'
+const GENERATE_LETTER_PATH = '/test/generate-patient-letter'
 
 export function toGenerateRequest(values: LetterFormValues): GenerateLetterRequest {
   const treatmentPlanItems = values.treatmentPlanItems
