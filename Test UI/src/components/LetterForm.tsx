@@ -1,0 +1,82 @@
+import type { ChangeEvent } from 'react'
+import { Box, Button, CircularProgress, Stack, TextField } from '@mui/material'
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
+import type { LetterFormValues } from '../types'
+
+interface LetterFormProps {
+  values: LetterFormValues
+  onChange: (values: LetterFormValues) => void
+  onSubmit: () => void
+  loading: boolean
+}
+
+export function LetterForm({ values, onChange, onSubmit, loading }: LetterFormProps) {
+  const isValid = values.patientName.trim() && values.clinicianName.trim() && values.patientNotes.trim()
+
+  const setField = (field: keyof LetterFormValues) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    onChange({ ...values, [field]: e.target.value })
+  }
+
+  return (
+    <Box
+      component="form"
+      onSubmit={(e) => {
+        e.preventDefault()
+        if (isValid && !loading) onSubmit()
+      }}
+    >
+      <Stack spacing={2}>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+          <TextField
+            label="Patient Name"
+            value={values.patientName}
+            onChange={setField('patientName')}
+            fullWidth
+            required
+            disabled={loading}
+          />
+          <TextField
+            label="Clinician Name"
+            value={values.clinicianName}
+            onChange={setField('clinicianName')}
+            fullWidth
+            required
+            disabled={loading}
+          />
+        </Stack>
+        <TextField
+          label="Treatment Plan / Treatment Items"
+          value={values.treatmentPlanItems}
+          onChange={setField('treatmentPlanItems')}
+          helperText="Separate multiple items with a comma or a new line."
+          fullWidth
+          multiline
+          minRows={2}
+          disabled={loading}
+        />
+        <TextField
+          label="Patient Notes"
+          value={values.patientNotes}
+          onChange={setField('patientNotes')}
+          helperText="The clinical notes the letter will be generated from. This is the main input."
+          fullWidth
+          multiline
+          minRows={10}
+          required
+          disabled={loading}
+        />
+        <Box>
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            disabled={!isValid || loading}
+            startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <AutoAwesomeIcon />}
+          >
+            {loading ? 'Generating letter…' : 'Generate Patient Letter'}
+          </Button>
+        </Box>
+      </Stack>
+    </Box>
+  )
+}
