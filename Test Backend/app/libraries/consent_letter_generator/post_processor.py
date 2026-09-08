@@ -67,7 +67,6 @@ class MarkdownPostProcessor:
         Fix the Markdown formatting only. Do not change, add, or remove any clinical
         information, and do not reword sentences beyond what these formatting fixes require:
         - Ensure consistent heading levels (max ###).
-        - Remove any greeting or sign-off the text starts/ends with (a new one is added separately).
         - Fix broken Markdown syntax only (stray symbols, inconsistent bullet markers, malformed tables).
         - PRESERVE all bullet points, numbered lists, headings, and tables exactly as structured — do NOT convert them into paragraphs.
 

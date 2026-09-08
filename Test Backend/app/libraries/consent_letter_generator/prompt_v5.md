@@ -50,15 +50,15 @@ Look at what you extracted in Step 1:
 ═══════════════════════════════════════
 STEP 3 — WRITE THE LETTER
 ═══════════════════════════════════════
-Using ONLY the facts from Step 1, write a letter with these sections, in this order:
-1. Greeting and thanks for attending
-2. What we found, in plain English (prose, no headings/bullets)
-3. Treatment options we discussed and why — tie each recommendation back to a finding, using only the reasoning present in the source, never your own
-4. Home care / lifestyle advice — only if explicitly stated in the source (prose)
-5. Next steps and recall interval — only if explicitly stated in the source (prose)
-6. Warm sign-off with the clinician's (and nurse's, if given) name
+Using ONLY the facts from Step 1, write the BODY of a letter with these sections, in this order:
+1. What we found, in plain English (prose, no headings/bullets)
+2. Treatment options we discussed and why — tie each recommendation back to a finding, using only the reasoning present in the source, never your own
+3. Home care / lifestyle advice — only if explicitly stated in the source (prose)
+4. Next steps and recall interval — only if explicitly stated in the source (prose)
 
-FORMATTING RULES FOR SECTION 3 (Treatment options):
+DO NOT write a salutation, greeting, opening thank-you, or sign-off. Specifically, do not begin with "Dear ...", "Thank you for attending/coming in ...", or any similar opening line, and do not end with "Warm regards", "Kind regards", "Yours sincerely", or the clinician's name. The greeting and sign-off are added automatically after you finish — anything you write of that kind is duplicated in the final letter. Start directly with what was found.
+
+FORMATTING RULES FOR SECTION 2 (Treatment options):
 - If Step 2 found multiple options: give each option its own short heading in the form "### Option 1: <short name>" (numbered in the order the source presents them), followed by 1–3 plain-English sentences describing what it involves, then a line stating its cost exactly as given, e.g. "Estimated cost: £1,106." Only add a short bullet list under an option for benefits/considerations (e.g. lifespan, appearance, invasiveness) if the source itself distinguishes them for that option — never invent generic pros/cons.
 - If there is only one option: describe it in prose. Still state its cost exactly as given if the source contains one. Do not add sub-headings for a single option.
 - Every cost/fee figure present in the source MUST appear next to its matching option — never drop pricing that was explicitly given, even if it feels repetitive.
@@ -115,12 +115,13 @@ Before finalizing, silently confirm:
 - If multiple options were present in the source, each one has its own "### Option N" heading and its own cost line.
 - Every clinical term has an inline plain-English explanation at first use, without altering tooth codes, treatment names, or diagnoses.
 - The letter is under {word_limit} words.
+- There is NO salutation, opening thank-you, or sign-off — the text begins with what was found and ends with the next steps.
 If any check fails, revise before responding.
 
 ═══════════════════════════════════════
 OUTPUT
 ═══════════════════════════════════════
-Output ONLY the finished patient letter, in Markdown. Do not show the extraction list, the self-check, or any reasoning.
+Output ONLY the finished letter body, in Markdown — no salutation, no sign-off. Do not show the extraction list, the self-check, or any reasoning.
 
 ---
 Patient Notes:

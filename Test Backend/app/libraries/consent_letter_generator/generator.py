@@ -58,15 +58,15 @@ Look at what you extracted in Step 1:
 ═══════════════════════════════════════
 STEP 3 — WRITE THE LETTER
 ═══════════════════════════════════════
-Using ONLY the facts from Step 1, write a letter with these sections, in this order:
-1. Greeting and thanks for attending
-2. What we found, in plain English (prose, no headings/bullets)
-3. Treatment options we discussed and why — tie each recommendation back to a finding, using only the reasoning present in the source, never your own
-4. Home care / lifestyle advice — only if explicitly stated in the source (prose)
-5. Next steps and recall interval — only if explicitly stated in the source (prose)
-6. Warm sign-off with the clinician's (and nurse's, if given) name
+Using ONLY the facts from Step 1, write the BODY of a letter with these sections, in this order:
+1. What we found, in plain English (prose, no headings/bullets)
+2. Treatment options we discussed and why — tie each recommendation back to a finding, using only the reasoning present in the source, never your own
+3. Home care / lifestyle advice — only if explicitly stated in the source (prose)
+4. Next steps and recall interval — only if explicitly stated in the source (prose)
 
-FORMATTING RULES FOR SECTION 3 (Treatment options):
+DO NOT write a salutation, greeting, opening thank-you, or sign-off. Specifically, do not begin with "Dear ...", "Thank you for attending/coming in ...", or any similar opening line, and do not end with "Warm regards", "Kind regards", "Yours sincerely", or the clinician's name. The greeting and sign-off are added automatically after you finish — anything you write of that kind is duplicated in the final letter. Start directly with what was found.
+
+FORMATTING RULES FOR SECTION 2 (Treatment options):
 - If Step 2 found multiple options: give each option its own short heading in the form "### Option 1: <short name>" (numbered in the order the source presents them), followed by 1-3 plain-English sentences describing what it involves, then a line stating its cost exactly as given, e.g. "Estimated cost: £1,106." Only add a short bullet list under an option for benefits/considerations (e.g. lifespan, appearance, invasiveness) if the source itself distinguishes them for that option — never invent generic pros/cons.
 - If there is only one option: describe it in prose. Still state its cost exactly as given if the source contains one. Do not add sub-headings for a single option.
 - Every cost/fee figure present in the source MUST appear next to its matching option — never drop pricing that was explicitly given, even if it feels repetitive.
@@ -123,12 +123,13 @@ Before finalizing, silently confirm:
 - If multiple options were present in the source, each one has its own "### Option N" heading and its own cost line.
 - Every clinical term has an inline plain-English explanation at first use, without altering tooth codes, treatment names, or diagnoses.
 - The letter is under {word_limit} words.
+- There is NO salutation, opening thank-you, or sign-off — the text begins with what was found and ends with the next steps.
 If any check fails, revise before responding.
 
 ═══════════════════════════════════════
 OUTPUT
 ═══════════════════════════════════════
-Output ONLY the finished patient letter, in Markdown. Do not show the extraction list, the self-check, or any reasoning.
+Output ONLY the finished letter body, in Markdown — no salutation, no sign-off. Do not show the extraction list, the self-check, or any reasoning.
 
 ---
 Patient Notes:
@@ -1487,6 +1488,53 @@ Additional notes:
             return round(base_limit * multiplier)
         return base_limit
 
+    # Openers like "Dear Tom," / "Thank you for attending your appointment today."
+    _GREETING_PATTERNS = (
+        re.compile(r'(?i)^dear\b[^\n]*$'),
+        re.compile(r'(?i)^(thank you|thanks)\b[^\n]*\b(attend|attending|coming|came|visit|visiting|appointment|consultation|seeing us|for your time)\b[^\n]*$'),
+        re.compile(r'(?i)^(it was|thank you for)\b[^\n]*\b(pleasure|lovely|good) to (see|meet)\b[^\n]*$'),
+    )
+
+    # Sign-offs like "Warm regards," / "Yours sincerely," — these end the letter,
+    # so everything from the match onwards (the closing plus the name) is dropped.
+    _SIGN_OFF_PATTERN = re.compile(
+        r'(?im)^\s*('
+        r'(warm|kind|best|warmest)\s+(regards|wishes)'
+        r'|yours\s+(sincerely|faithfully|truly)'
+        r'|sincerely|regards|best\s+wishes'
+        r')\s*[,.]?\s*$'
+    )
+
+    @classmethod
+    def strip_greeting_and_sign_off(cls, text: str) -> str:
+        """
+        Remove any salutation, opening thank-you, or sign-off the model wrote.
+
+        The prompt tells the model not to write them, but models drift, so this
+        is enforced in code: `add_greeting_and_sign_off` always adds its own
+        greeting and sign-off, and anything the model produced would otherwise
+        appear alongside it as a duplicate. Only recognisable greeting/sign-off
+        lines are touched — clinical prose is never matched.
+        """
+        if not text:
+            return text
+
+        # Drop the sign-off and everything after it (the closing plus the name).
+        match = cls._SIGN_OFF_PATTERN.search(text)
+        if match:
+            text = text[:match.start()]
+
+        # Drop leading salutation/thank-you paragraphs, one at a time.
+        paragraphs = re.split(r'\n\s*\n', text.strip())
+        while paragraphs:
+            first = paragraphs[0].strip()
+            if any(p.match(first) for p in cls._GREETING_PATTERNS):
+                paragraphs.pop(0)
+                continue
+            break
+
+        return "\n\n".join(paragraphs).strip()
+
     @staticmethod
     def add_greeting_and_sign_off(processed_text: str, patient_name: str, surgeon_name: str):
         return f"Dear {patient_name},\n\nThank you for attending your recent dental appointment. I wanted to provide a brief summary of what we covered.\n\n{processed_text}\n\nI've included a few easy-to-read guides on the treatments we talked about, so you can review them at your convenience. We're here to support you at every step and happy to answer any questions you may have.\n\nWarm regards,\n\n{surgeon_name}"
@@ -1549,6 +1597,7 @@ Additional notes:
         else:
             processed_text = text
 
+        processed_text = self.strip_greeting_and_sign_off(processed_text)
         processed_text = self.add_greeting_and_sign_off(processed_text, patient_name, surgeon_name)
 
         processed_sections = [s.strip() for s in processed_text.split("\n\n") if s.strip()]
