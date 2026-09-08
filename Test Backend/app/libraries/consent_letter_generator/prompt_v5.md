@@ -1,17 +1,20 @@
 # Consent letter prompt — v5
 
-## Two letter styles
+## Letter styles
 
-The generator offers two styles, selectable in the test UI and exposed as separate endpoints:
+The generator offers three styles, selectable in the test UI and exposed as separate endpoints:
 
 | Style | Endpoint | Presentation |
 | --- | --- | --- |
-| `bulleted` (default) | `POST /test/generate-patient-letter` | Findings and options broken into short bullet points. |
-| `narrative` | `POST /test/generate-patient-letter-narrative` | The same letter as flowing paragraphs, no bullet points. |
+| `standard` (default) | `POST /test/generate-patient-letter` | Paragraphs throughout, with the treatment options set out as bullets so they can be compared. |
+| `bulleted` | `POST /test/generate-patient-letter-bulleted` | Bullet points used throughout, including the findings. Comparison only. |
+| `narrative` | `POST /test/generate-patient-letter-narrative` | Flowing paragraphs everywhere, including the options. Comparison only. |
 
-**They are clinically identical.** Same sections, same grounding rules, same tooth mapping, same tooth counts, same cost handling — only the presentation of each section's content differs. So both are built from the ONE template reproduced below, with five presentation fragments swapped in (`LETTER_STYLES` in `generator.py`). A fix to any clinical rule therefore applies to both styles at once, rather than having to be made twice in two copies that would inevitably drift apart.
+**`standard` is the format the dentists asked for** (Dr. Sahan, 2026-09-08): bulleted letters are harder for patients to read, so the letter is prose, and bullets are used only where multiple treatment options need to be compared. The other two are retained so the formats can be viewed side by side, and are expected to be removed once the choice is confirmed.
 
-The template below is shown with the **bulleted** fragments in place. The five fragments that differ are marked in `generator.py` by the placeholders `<<STYLE_CONTENT_RULE>>`, `<<STYLE_FINDINGS_RULE>>`, `<<STYLE_OPTION_RULE>>`, `<<STYLE_WRITING_RULE>>` and `<<STYLE_EXAMPLE>>`; in the narrative style these instead forbid bullet points, ask for connected sentences within a paragraph, and carry a worked example written in paragraph form. Section and option headings are unchanged between the two.
+**All three are clinically identical.** Same sections, same grounding rules, same tooth mapping, same tooth counts, same cost handling — only the presentation of each section's content differs. So all three are built from the ONE template reproduced below, with five presentation fragments swapped in (`LETTER_STYLES` in `generator.py`). A fix to any clinical rule therefore applies to every style at once, rather than having to be made three times in copies that would inevitably drift apart.
+
+The template below is shown with the **bulleted** fragments in place. The five fragments that differ are marked in `generator.py` by the placeholders `<<STYLE_CONTENT_RULE>>`, `<<STYLE_FINDINGS_RULE>>`, `<<STYLE_OPTION_RULE>>`, `<<STYLE_WRITING_RULE>>` and `<<STYLE_EXAMPLE>>`. Section and option headings are unchanged across all three styles.
 
 ## Feedback addressed
 
@@ -114,7 +117,8 @@ Anything the clinician recommended alongside or before the treatment itself, wit
 ## Homecare Advice
 Oral hygiene, diet, or lifestyle advice the patient should follow at home.
 
-OMIT ANY SECTION THE NOTES GIVE NO CONTENT FOR. A section heading with nothing real underneath it is worse than no section: never invent findings, advice, recommendations or next steps to fill one. If the notes contain no homecare advice, there is no Homecare Advice section.
+OMIT ANY SECTION THE NOTES GIVE NO CONTENT FOR. A section heading with nothing real underneath it is worse than no section: never invent findings, advice, recommendations or next steps to fill one. If the notes contain no homecare advice, there is no Homecare Advice section — the heading is absent too.
+Do NOT write the heading and then report that there is nothing to say. Lines such as "(There is no additional home-care advice recorded.)", "None recorded.", or "Not applicable." must never appear in the letter. The patient should not be shown an empty section at all; simply move on to the next one that does have content.
 
 DO NOT write a salutation, greeting, opening thank-you, or sign-off. Specifically, do not begin with "Dear ...", "Thank you for attending/coming in ...", or any similar opening line, and do not end with "Warm regards", "Kind regards", "Yours sincerely", or the clinician's name. The greeting and sign-off are added automatically after you finish — anything you write of that kind is duplicated in the final letter. Start directly with the "## Examination Findings" heading.
 
@@ -222,6 +226,7 @@ Before finalizing, silently confirm:
 - No sentence explains a "why" using outside dental knowledge that wasn't stated in the source.
 - Every price/fee stated in the source appears in the letter, exactly as written.
 - Every section present has a "## <Section name>" heading, following the Step 3 structure and order: Examination Findings, Discussion, Treatment Options, Next Steps, Recommendations, Homecare Advice. Sections the notes give no content for are absent entirely — none has been padded with invented content.
+- No section says there is nothing to report. If a section would have contained a line like "(There is no home-care advice recorded.)" or "None recorded.", that whole section — heading included — has been deleted instead.
 - If multiple options were present in the source, they sit under "## Treatment Options", and each has its own "### Option N: ..." sub-heading — three hash characters, not bold text and not a plain sentence.
 - Every option states its cost on its own line, exactly as the notes give it, and the price sits under the option it belongs to.
 - Within each option, re-read every tooth code you wrote: no tooth appears under two different treatments, and each one matches the tooth map from Step 1. If a tooth appears twice in the same option, you have mistaken a flat "teeth involved" list for a treatment list — fix it.

@@ -56,10 +56,19 @@ export function LetterStyleSelector({ value, onChange, disabled }: LetterStyleSe
                   sx={{ m: 0, alignItems: 'flex-start' }}
                   label={
                     <span>
-                      <Typography variant="body2" fontWeight={600}>
+                      <Typography variant="body2" fontWeight={600} component="span">
                         {style.label}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary">
+                      {style.recommended && (
+                        <Typography
+                          variant="caption"
+                          component="span"
+                          sx={{ ml: 0.75, color: 'primary.main', fontWeight: 600 }}
+                        >
+                          (recommended)
+                        </Typography>
+                      )}
+                      <Typography variant="caption" color="text.secondary" component="p" sx={{ m: 0 }}>
                         {style.description}
                       </Typography>
                     </span>

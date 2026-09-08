@@ -12,6 +12,63 @@ from .models import LetterRequest, LetterResponse
 # template means a fix to a grounding or tooth-mapping rule applies to both
 # styles at once, instead of having to be made twice and drifting apart.
 LETTER_STYLES = {
+    "standard": {
+        "label": "Standard",
+        "description": "Paragraphs throughout, with the treatment options set out as bullets so they can be compared.",
+        "content_rule": (
+            'The content inside each section is written as flowing paragraphs of plain English — short sentences joined '
+            'into a paragraph that reads naturally when read aloud. Patients find continuous prose easier to read than '
+            'fragmented lists, so do NOT use bullet points in the findings, discussion, next steps, recommendations or '
+            'homecare sections. There is ONE exception: the "## Treatment Options" section, where the patient is '
+            'weighing choices against each other and bullet points are required — see the formatting rules below. '
+            'Section headings are used throughout, in both cases.'
+        ),
+        "findings_rule": (
+            "Write the findings as a flowing paragraph rather than a list — every finding still has to be there, it is "
+            "only the presentation that changes."
+        ),
+        "option_rule": (
+            "- Under each option's sub-heading, set out what it involves as SHORT BULLET POINTS — which teeth, which "
+            "material, what the treatment includes, how long the material lasts, what preparation it needs, and what "
+            "extra stages it involves. This is the ONE place in the letter where bullets are used, because the patient "
+            "is comparing the options side by side and a dense paragraph is much harder to weigh up.\n"
+            "- If the notes describe only ONE treatment path, there is nothing to compare: describe it in paragraphs "
+            "under \"## Treatment Recommended\", with no bullet points and no \"### Option N\" sub-headings."
+        ),
+        "writing_rule": (
+            "- Use short sentences joined into short paragraphs everywhere except the treatment options, which are "
+            "bulleted. Do not use bullet points or numbered lists in any other section."
+        ),
+        "example": """CORRECT — note that every section is written as paragraphs EXCEPT the treatment options, which are bulleted so the patient can compare them, each with its cost on its own line:
+
+## Examination Findings
+Your oral hygiene is good. The LR5 and LL5 need crowns, and the UR6 needs a filling.
+
+## Discussion
+We talked through the two crown materials. A metal crown lasts about 20 years but needs more tooth preparation, while a ceramic crown lasts about 10 years and needs less. To match the LR5, I would also crown the LR4.
+
+## Treatment Options
+
+### Option 1: Crowns and a filling
+- Crowns on the LR4, LR5 and LL5.
+- A filling on the UR6.
+
+Estimated cost: £820.
+
+### Option 2: Crowns on all four teeth
+- Crowns on the LR4, LR5, LL5 and UR6.
+- A longer-lasting result.
+
+Estimated cost: £2,400.
+
+You have not yet decided which option to go for.
+
+## Next Steps
+A review appointment has been booked to decide which option you would like.
+
+## Homecare Advice
+Cutting down on fizzy drinks will help protect your teeth.""",
+    },
     "bulleted": {
         "label": "Bulleted",
         "description": "Findings and options broken into short bullet points for quick scanning.",
@@ -117,7 +174,10 @@ Cutting down on fizzy drinks will help protect your teeth.""",
     },
 }
 
-DEFAULT_LETTER_STYLE = "bulleted"
+# "standard" is the format the dentists asked for: prose letters, with bullets
+# used only where multiple treatment options need to be compared. The other two
+# are kept selectable for comparison.
+DEFAULT_LETTER_STYLE = "standard"
 
 
 class ConsentLetterGenerator:
@@ -221,7 +281,8 @@ Anything the clinician recommended alongside or before the treatment itself, wit
 ## Homecare Advice
 Oral hygiene, diet, or lifestyle advice the patient should follow at home.
 
-OMIT ANY SECTION THE NOTES GIVE NO CONTENT FOR. A section heading with nothing real underneath it is worse than no section: never invent findings, advice, recommendations or next steps to fill one. If the notes contain no homecare advice, there is no Homecare Advice section.
+OMIT ANY SECTION THE NOTES GIVE NO CONTENT FOR. A section heading with nothing real underneath it is worse than no section: never invent findings, advice, recommendations or next steps to fill one. If the notes contain no homecare advice, there is no Homecare Advice section — the heading is absent too.
+Do NOT write the heading and then report that there is nothing to say. Lines such as "(There is no additional home-care advice recorded.)", "None recorded.", or "Not applicable." must never appear in the letter. The patient should not be shown an empty section at all; simply move on to the next one that does have content.
 
 DO NOT write a salutation, greeting, opening thank-you, or sign-off. Specifically, do not begin with "Dear ...", "Thank you for attending/coming in ...", or any similar opening line, and do not end with "Warm regards", "Kind regards", "Yours sincerely", or the clinician's name. The greeting and sign-off are added automatically after you finish — anything you write of that kind is duplicated in the final letter. Start directly with the "## Examination Findings" heading.
 
@@ -299,6 +360,7 @@ Before finalizing, silently confirm:
 - No sentence explains a "why" using outside dental knowledge that wasn't stated in the source.
 - Every price/fee stated in the source appears in the letter, exactly as written.
 - Every section present has a "## <Section name>" heading, following the Step 3 structure and order: Examination Findings, Discussion, Treatment Options, Next Steps, Recommendations, Homecare Advice. Sections the notes give no content for are absent entirely — none has been padded with invented content.
+- No section says there is nothing to report. If a section would have contained a line like "(There is no home-care advice recorded.)" or "None recorded.", that whole section — heading included — has been deleted instead.
 - If multiple options were present in the source, they sit under "## Treatment Options", and each has its own "### Option N: ..." sub-heading — three hash characters, not bold text and not a plain sentence.
 - Every option states its cost on its own line, exactly as the notes give it, and the price sits under the option it belongs to.
 - Within each option, re-read every tooth code you wrote: no tooth appears under two different treatments, and each one matches the tooth map from Step 1. If a tooth appears twice in the same option, you have mistaken a flat "teeth involved" list for a treatment list — fix it.

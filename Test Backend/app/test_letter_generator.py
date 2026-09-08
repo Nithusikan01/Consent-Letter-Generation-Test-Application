@@ -17,6 +17,7 @@ router = APIRouter()
 
 API_KEY = os.getenv("OPENAPI_API_KEY", os.getenv("openapi_api_key", ""))
 
+BULLETED_LETTER_STYLE = "bulleted"
 NARRATIVE_LETTER_STYLE = "narrative"
 
 
@@ -41,6 +42,7 @@ class LetterStyle(BaseModel):
 
 STYLE_ENDPOINTS = {
     DEFAULT_LETTER_STYLE: "/test/generate-patient-letter",
+    BULLETED_LETTER_STYLE: "/test/generate-patient-letter-bulleted",
     NARRATIVE_LETTER_STYLE: "/test/generate-patient-letter-narrative",
 }
 
@@ -99,7 +101,11 @@ async def list_letter_styles() -> List[LetterStyle]:
 
 @router.post("/generate-patient-letter", response_model=TestLetterResponse)
 async def generate_patient_letter_test(req: TestLetterRequest) -> TestLetterResponse:
-    """Bulleted letter — findings and options broken into short bullet points.
+    """Standard letter — the format the dentists asked for.
+
+    Prose throughout, with bullet points used only where multiple treatment options
+    need to be compared. Bulleted letters are harder for patients to read, so bullets
+    are confined to the options section.
 
     Mirrors the logic in api_v2.consent_bundle.generate_patient_letter, which only
     receives patient_notes (treatment items are looked up from the ConsentBundle in
@@ -110,12 +116,19 @@ async def generate_patient_letter_test(req: TestLetterRequest) -> TestLetterResp
     return await _generate(req, DEFAULT_LETTER_STYLE)
 
 
+@router.post("/generate-patient-letter-bulleted", response_model=TestLetterResponse)
+async def generate_patient_letter_bulleted(req: TestLetterRequest) -> TestLetterResponse:
+    """Bulleted letter — bullet points used throughout, including the findings.
+
+    Kept for comparison only. Clinically identical to the standard letter.
+    """
+    return await _generate(req, BULLETED_LETTER_STYLE)
+
+
 @router.post("/generate-patient-letter-narrative", response_model=TestLetterResponse)
 async def generate_patient_letter_narrative(req: TestLetterRequest) -> TestLetterResponse:
-    """Narrative letter — the same content written as flowing paragraphs.
+    """Narrative letter — flowing paragraphs everywhere, including the options.
 
-    Identical to /generate-patient-letter in every clinical respect: same notes in,
-    same sections, same grounding rules. Only the presentation differs, so the two
-    can be compared side by side to decide which reads better for patients.
+    Kept for comparison only. Clinically identical to the standard letter.
     """
     return await _generate(req, NARRATIVE_LETTER_STYLE)
