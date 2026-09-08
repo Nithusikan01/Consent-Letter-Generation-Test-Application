@@ -1,14 +1,18 @@
 import { useRef, useState } from 'react'
-import { Alert, Box, Button, Paper, Snackbar, Stack } from '@mui/material'
+import { Alert, Box, Button, Chip, Paper, Snackbar, Stack } from '@mui/material'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import ReplayIcon from '@mui/icons-material/Replay'
+import { letterStyles } from '../types'
+import type { LetterStyleId } from '../types'
 
 interface GeneratedLetterViewProps {
   html: string
   onGenerateAgain: () => void
+  style?: LetterStyleId
 }
 
-export function GeneratedLetterView({ html, onGenerateAgain }: GeneratedLetterViewProps) {
+export function GeneratedLetterView({ html, onGenerateAgain, style }: GeneratedLetterViewProps) {
+  const styleLabel = letterStyles.find((s) => s.id === style)?.label
   const [copied, setCopied] = useState(false)
   const [copyError, setCopyError] = useState(false)
   const letterRef = useRef<HTMLDivElement>(null)
@@ -33,13 +37,16 @@ export function GeneratedLetterView({ html, onGenerateAgain }: GeneratedLetterVi
 
   return (
     <Stack spacing={2}>
-      <Stack direction="row" spacing={1.5} flexWrap="wrap">
+      <Stack direction="row" spacing={1.5} flexWrap="wrap" alignItems="center">
         <Button variant="outlined" startIcon={<ContentCopyIcon />} onClick={handleCopy}>
           Copy Letter
         </Button>
         <Button variant="text" startIcon={<ReplayIcon />} onClick={onGenerateAgain}>
           Generate Again
         </Button>
+        {styleLabel && (
+          <Chip label={`${styleLabel} style`} size="small" variant="outlined" color="primary" />
+        )}
       </Stack>
 
       <Paper

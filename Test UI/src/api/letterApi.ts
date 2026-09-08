@@ -1,8 +1,12 @@
 import axios from 'axios'
 import { apiClient } from './client'
-import type { GenerateLetterRequest, GenerateLetterResponse, LetterFormValues } from '../types'
-
-const GENERATE_LETTER_PATH = '/test/generate-patient-letter'
+import { defaultLetterStyle, letterStyles } from '../types'
+import type {
+  GenerateLetterRequest,
+  GenerateLetterResponse,
+  LetterFormValues,
+  LetterStyleId,
+} from '../types'
 
 export function toGenerateRequest(values: LetterFormValues): GenerateLetterRequest {
   return {
@@ -12,12 +16,19 @@ export function toGenerateRequest(values: LetterFormValues): GenerateLetterReque
   }
 }
 
+/** Each style has its own endpoint; the request body is the same for both. */
+function endpointFor(style: LetterStyleId): string {
+  const match = letterStyles.find((s) => s.id === style)
+  return (match ?? letterStyles.find((s) => s.id === defaultLetterStyle)!).endpoint
+}
+
 export async function generatePatientLetter(
   values: LetterFormValues,
+  style: LetterStyleId = defaultLetterStyle,
 ): Promise<GenerateLetterResponse> {
   try {
     const { data } = await apiClient.post<GenerateLetterResponse>(
-      GENERATE_LETTER_PATH,
+      endpointFor(style),
       toGenerateRequest(values),
     )
     return data

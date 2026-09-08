@@ -1,5 +1,20 @@
 # Consent letter prompt — v5
 
+## Two letter styles
+
+The generator offers two styles, selectable in the test UI and exposed as separate endpoints:
+
+| Style | Endpoint | Presentation |
+| --- | --- | --- |
+| `bulleted` (default) | `POST /test/generate-patient-letter` | Findings and options broken into short bullet points. |
+| `narrative` | `POST /test/generate-patient-letter-narrative` | The same letter as flowing paragraphs, no bullet points. |
+
+**They are clinically identical.** Same sections, same grounding rules, same tooth mapping, same tooth counts, same cost handling — only the presentation of each section's content differs. So both are built from the ONE template reproduced below, with five presentation fragments swapped in (`LETTER_STYLES` in `generator.py`). A fix to any clinical rule therefore applies to both styles at once, rather than having to be made twice in two copies that would inevitably drift apart.
+
+The template below is shown with the **bulleted** fragments in place. The five fragments that differ are marked in `generator.py` by the placeholders `<<STYLE_CONTENT_RULE>>`, `<<STYLE_FINDINGS_RULE>>`, `<<STYLE_OPTION_RULE>>`, `<<STYLE_WRITING_RULE>>` and `<<STYLE_EXAMPLE>>`; in the narrative style these instead forbid bullet points, ask for connected sentences within a paragraph, and carry a worked example written in paragraph form. Section and option headings are unchanged between the two.
+
+## Feedback addressed
+
 Addresses dentist feedback from `Feedback on the Letter Generator.pdf` (2026-09-07):
 1. Pricing was missing from generated letters.
 2. Multiple treatment options were blended into one paragraph instead of being presented separately.
