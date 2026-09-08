@@ -5,15 +5,9 @@ import type { GenerateLetterRequest, GenerateLetterResponse, LetterFormValues } 
 const GENERATE_LETTER_PATH = '/test/generate-patient-letter'
 
 export function toGenerateRequest(values: LetterFormValues): GenerateLetterRequest {
-  const treatmentPlanItems = values.treatmentPlanItems
-    .split(/[,\n]/)
-    .map((item) => item.trim())
-    .filter(Boolean)
-
   return {
     patient_name: values.patientName.trim(),
     clinician_name: values.clinicianName.trim(),
-    treatment_plan_items: treatmentPlanItems,
     patient_notes: values.patientNotes.trim(),
   }
 }

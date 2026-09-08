@@ -45,20 +45,10 @@ export function LetterForm({ values, onChange, onSubmit, loading }: LetterFormPr
           />
         </Stack>
         <TextField
-          label="Treatment Plan / Treatment Items"
-          value={values.treatmentPlanItems}
-          onChange={setField('treatmentPlanItems')}
-          helperText="Separate multiple items with a comma or a new line."
-          fullWidth
-          multiline
-          minRows={2}
-          disabled={loading}
-        />
-        <TextField
           label="Patient Notes"
           value={values.patientNotes}
           onChange={setField('patientNotes')}
-          helperText="The clinical notes the letter will be generated from. This is the main input."
+          helperText="The clinical notes the letter will be generated from, including the treatment plan. This is the only clinical input, matching the real app."
           fullWidth
           multiline
           minRows={10}
