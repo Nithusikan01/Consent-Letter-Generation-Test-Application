@@ -69,6 +69,12 @@ Notes often state which treatment goes on which tooth in ONE detailed sentence, 
 - A tooth gets exactly ONE treatment unless the notes explicitly say otherwise. The same tooth code must never end up under two different treatments.
 - If the notes genuinely do not say which treatment a listed tooth gets, describe the option without assigning that tooth to a specific treatment. Do not guess, and do not split the list evenly.
 
+COUNTING TEETH IN AN OPTION:
+- "top and bottom 4 teeth", "upper and lower 4 teeth", "4 top and bottom" all mean FOUR IN EACH ARCH — four upper PLUS four lower, eight teeth in total. They never mean four teeth altogether. Write this as "the four upper and four lower front teeth" so the patient cannot misread it either.
+- Keep exactly the count the notes give. Never shrink a per-arch count into a total, and never expand a total into a per-arch count.
+- Where the notes describe an option only by a count or a region ("the top and bottom 4 teeth", "the upper front teeth"), describe it the same way. Do NOT name specific tooth codes for that option: the notes have not said which teeth they are, so naming them invents clinical detail. Use tooth codes only where the notes give them for that option.
+- Teeth named elsewhere in the notes, for a different option or a different part of the discussion, do not carry over. Each option covers exactly the teeth the notes give for that option.
+
 ═══════════════════════════════════════
 STEP 2 — DECIDE THE STRUCTURE
 ═══════════════════════════════════════
@@ -80,7 +86,7 @@ Look at what you extracted in Step 1:
 STEP 3 — WRITE THE LETTER
 ═══════════════════════════════════════
 Using ONLY the facts from Step 1, write the BODY of a letter with these sections, in this order:
-1. What we found, in plain English (prose, no headings/bullets)
+1. What we found, in plain English (prose, no headings/bullets). Include EVERY finding and risk rating from Step 1 — the bite/occlusion and any measurement such as an overjet are findings and belong here just as much as the teeth themselves. Do not shorten this section by dropping findings; a finding the notes recorded is a finding the patient is told about.
 2. Treatment options we discussed and why — tie each recommendation back to a finding, using only the reasoning present in the source, never your own
 3. Home care / lifestyle advice — only if explicitly stated in the source (prose)
 4. Next steps and recall interval — only if explicitly stated in the source (prose)
@@ -88,7 +94,8 @@ Using ONLY the facts from Step 1, write the BODY of a letter with these sections
 DO NOT write a salutation, greeting, opening thank-you, or sign-off. Specifically, do not begin with "Dear ...", "Thank you for attending/coming in ...", or any similar opening line, and do not end with "Warm regards", "Kind regards", "Yours sincerely", or the clinician's name. The greeting and sign-off are added automatically after you finish — anything you write of that kind is duplicated in the final letter. Start directly with what was found.
 
 FORMATTING RULES FOR SECTION 2 (Treatment options):
-- If Step 2 found multiple options: give each option its own short heading in the form "### Option 1: <short name>" (numbered in the order the source presents them), followed by 1-3 plain-English sentences describing what it involves, then a line stating its cost exactly as given, e.g. "Estimated cost: £1,106."
+- If Step 2 found multiple options: give each option its own heading on its own line, written EXACTLY as "### Option 1: <short name>" — three hash characters, then the option number, then a short name (numbered in the order the source presents them). Follow it with 1-3 plain-English sentences describing what it involves, then a line stating its cost exactly as given, e.g. "Estimated cost: £1,106."
+- The "### Option N" heading is required for every option. Do NOT instead write the option name in bold ("**Option 1: ...**"), and do not group the options under a single shared heading such as "### Treatment options". Each option is its own "###" heading so the patient can see the choices set apart from one another — this is the whole point of the section.
 - CARRY MATERIAL PROPERTIES INTO EVERY OPTION THAT USES THAT MATERIAL. If Step 1 recorded a property for a material — how long it lasts, whether it needs tooth preparation, its appearance or durability — it MUST appear in each option using that material, even though the notes state it only once and somewhere else entirely (typically in the discussion, not in the numbered option). The patient is choosing between these options largely on how long each lasts, so a stated lifespan is never optional. If the notes give a lifespan for one material, the option using the other material must carry its stated lifespan too — never state one and omit the other.
 - These properties may be written as a short bullet list under the option or folded into its sentences, whichever reads better. Include only properties the source actually states — never invent generic pros/cons.
 - If there is only one option: describe it in prose. Still state its cost exactly as given if the source contains one. Do not add sub-headings for a single option.
@@ -128,6 +135,20 @@ GENERAL WRITING RULES:
 - Keep the full letter under {word_limit} words.
 - Tone: warm, professional, reassuring — never alarming, never clinical or cold.
 
+CLINICAL SHORTHAND — notes are written fast, in abbreviations, and often with typos. Read through the shorthand and the spelling mistakes; a finding written in shorthand is still a finding and must not be skipped because it was hard to read:
+- O/E, o/e → on examination
+- OH → oral hygiene
+- MH → medical history
+- PCO, C/O → the patient's own concern or complaint
+- OJ → overjet (how far the upper front teeth sit ahead of the lower ones); "2mm OJ" is a 2 mm overjet
+- occ → occlusion, i.e. the bite
+- Class I / Class II / Class III, with "div I" or "div II" → the classification of the bite; report it as written (e.g. "a Class II division I bite"), and treat it as a finding
+- rv → review appointment
+- pt → patient
+- Dw pt → discussed with the patient
+- BPE → gum health screening score
+Typos in the notes ("LCass II" for "Class II", "emax"/"e.max", "yars" for "years") do not change the meaning — read the intended term and write it correctly in the letter.
+
 GLOSSARY — use only where it improves understanding without changing clinical meaning; if a term isn't listed, or its layman's-term column below is blank, leave it as written rather than inventing a simplification:
 - Acute → short-term
 - Chronic → long-term
@@ -153,12 +174,14 @@ Before finalizing, silently confirm:
 - Every sentence traces back to something explicit in the Patient Notes, Treatment Plan Items, Consent Templates, or Additional Notes.
 - No sentence explains a "why" using outside dental knowledge that wasn't stated in the source.
 - Every price/fee stated in the source appears in the letter, exactly as written.
-- If multiple options were present in the source, each one has its own "### Option N" heading and its own cost line.
+- If multiple options were present in the source, each one has its own cost line and its own heading written as "### Option N: ..." — starting with three hash characters, not bold text, and not gathered under one shared "Treatment options" heading.
 - Within each option, re-read every tooth code you wrote: no tooth appears under two different treatments, and each one matches the tooth map from Step 1. If a tooth appears twice in the same option, you have mistaken a flat "teeth involved" list for a treatment list — fix it.
 - Every tooth code in the letter appears somewhere in the source notes. You have not introduced a tooth the notes never mention.
 - No risk rating has been written up as a present condition: if the notes say only "caries risk: high", the letter does not claim any tooth has decay, a cavity, or a carious lesion.
 - Every reason given for a treatment is the reason the notes give. You have not swapped in a more typical-sounding one, and treatments the notes leave unexplained are left unexplained.
 - Every material property from Step 1 — lifespan, tooth preparation, appearance, durability — appears in each option using that material. In particular, if the notes give a lifespan for BOTH materials, both lifespans are in the letter; you have not stated one and dropped the other.
+- Every tooth count matches the notes: an option covering four teeth in each arch says "four upper and four lower" (eight), not "four front teeth". No option names specific tooth codes that the notes did not give for that option.
+- Every finding from Step 1 reached the letter, including any written in shorthand — if the notes record a bite classification or an overjet measurement, the letter states it.
 - Every clinical term has an inline plain-English explanation at first use, without altering tooth codes, treatment names, or diagnoses.
 - The letter is under {word_limit} words.
 - There is NO salutation, opening thank-you, or sign-off — the text begins with what was found and ends with the next steps.
