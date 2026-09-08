@@ -48,6 +48,13 @@ Before writing anything, list for yourself only the facts explicitly present in 
 - Recall interval, if stated
 Anything not explicitly present does not make this list — and therefore does not make the letter.
 
+TOOTH-BY-TOOTH MAPPING (do this as part of Step 1, and get it right — errors here reach the patient):
+Notes often state which treatment goes on which tooth in ONE detailed sentence, and then repeat a FLAT LIST of every tooth involved when summarising an option. These are not the same thing.
+- Build an explicit map of tooth code → treatment, taken from the DETAILED sentence that names the treatment ("fillings added to the UL1 and LL1", "a veneer placed on the UR1 and LR1").
+- A flat list of teeth in an option summary (e.g. "composite veneers / filling mix on the UR2, UR1, UL1, LR1 and LL1 teeth") lists every tooth INVOLVED in that option. It does NOT mean every tooth in it gets the same treatment. Never read such a list as if it were the veneer list or the filling list — resolve each tooth against the detailed sentence instead.
+- A tooth gets exactly ONE treatment unless the notes explicitly say otherwise. The same tooth code must never end up under two different treatments.
+- If the notes genuinely do not say which treatment a listed tooth gets, describe the option without assigning that tooth to a specific treatment. Do not guess, and do not split the list evenly.
+
 ═══════════════════════════════════════
 STEP 2 — DECIDE THE STRUCTURE
 ═══════════════════════════════════════
@@ -71,19 +78,29 @@ FORMATTING RULES FOR SECTION 2 (Treatment options):
 - If there is only one option: describe it in prose. Still state its cost exactly as given if the source contains one. Do not add sub-headings for a single option.
 - Every cost/fee figure present in the source MUST appear next to its matching option — never drop pricing that was explicitly given, even if it feels repetitive.
 
-WORKED EXAMPLE (for formatting only — never copy these clinical facts into a real letter; they are illustrative, not from any real patient):
+WORKED EXAMPLE (formatting and tooth-mapping only — these clinical facts are illustrative and must NEVER appear in a real letter; the teeth and figures below are deliberately different from any real case):
 
-Patient notes: "pt unsure which to go for - can do either options: 1) composite veneers on UR1/UL1, total cost £1106  2) emax veneers on top 4 teeth, £5800, longer lasting"
+Patient notes: "crowns needed on the LR5 and LL5, and a filling on the UR6. In order to match the LR5 I would also do the LR4 crown. pt unsure which to go for - can do either options: 1) crown / filling mix on the LR4, LR5, LL5 and UR6 teeth, total cost £820  2) crowns on all four teeth, £2400, longer lasting"
 
-Correct handling of that section:
+Step 1 tooth map, taken from the DETAILED sentence (not the flat list):
+- crown → LR5, LL5, LR4
+- filling → UR6
+The flat list in option 1 ("LR4, LR5, LL5 and UR6") is only the set of teeth INVOLVED. UR6 stays a filling there. In option 2 the source explicitly says crowns on all four, so UR6 becomes a crown in that option only.
+
+WRONG (never do this — UR6 is double-booked as both a crown and a filling):
+
+### Option 1: Crowns and a filling
+This involves crowns on the LR4, LR5, LL5 and UR6, and a filling on the UR6. Estimated cost: £820.
+
+CORRECT:
 
 We discussed two ways to address this:
 
-### Option 1: Composite veneers
-This involves composite veneers on the UR1 and UL1. Estimated cost: £1,106.
+### Option 1: Crowns and a filling
+This involves crowns on the LR4, LR5 and LL5, and a filling on the UR6. Estimated cost: £820.
 
-### Option 2: E.max veneers
-This involves e.max veneers on the top four teeth and offers a longer-lasting result. Estimated cost: £5,800.
+### Option 2: Crowns on all four teeth
+This involves crowns on the LR4, LR5, LL5 and UR6, and offers a longer-lasting result. Estimated cost: £2,400.
 
 You have not yet decided which option to go for.
 
@@ -121,6 +138,8 @@ Before finalizing, silently confirm:
 - No sentence explains a "why" using outside dental knowledge that wasn't stated in the source.
 - Every price/fee stated in the source appears in the letter, exactly as written.
 - If multiple options were present in the source, each one has its own "### Option N" heading and its own cost line.
+- Within each option, re-read every tooth code you wrote: no tooth appears under two different treatments, and each one matches the tooth map from Step 1. If a tooth appears twice in the same option, you have mistaken a flat "teeth involved" list for a treatment list — fix it.
+- Every tooth code in the letter appears somewhere in the source notes. You have not introduced a tooth the notes never mention.
 - Every clinical term has an inline plain-English explanation at first use, without altering tooth codes, treatment names, or diagnoses.
 - The letter is under {word_limit} words.
 - There is NO salutation, opening thank-you, or sign-off — the text begins with what was found and ends with the next steps.
