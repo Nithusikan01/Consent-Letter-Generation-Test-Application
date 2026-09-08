@@ -56,6 +56,7 @@ Before writing anything, list for yourself only the facts explicitly present in 
 - Diagnoses explicitly stated
 - Every distinct treatment OPTION discussed, each matched to its consent clause from the Consent Templates
 - For each treatment, the REASON the notes give for it, in the notes' own terms (e.g. "the teeth are short"). If the notes give no reason, record "no reason stated" — do not supply one.
+- For each MATERIAL or treatment type, every property the notes state about it — how long it lasts, whether it needs tooth preparation, appearance, durability. These are frequently given ONCE, in a comparison sentence well away from the numbered options (e.g. "composite veneer (lasts 3-8 years) vs an emax veneer (lasts 15 years but needs some tooth prep)"). Record each property against its material so it can be carried into every option that uses that material.
 - Every price, fee, or cost figure stated for a treatment or option — copy the exact figure and currency symbol (e.g. "£1,106"). Never round, estimate, average, or omit a stated figure.
 - Advice or instructions explicitly given
 - Recall interval, if stated
@@ -87,7 +88,9 @@ Using ONLY the facts from Step 1, write the BODY of a letter with these sections
 DO NOT write a salutation, greeting, opening thank-you, or sign-off. Specifically, do not begin with "Dear ...", "Thank you for attending/coming in ...", or any similar opening line, and do not end with "Warm regards", "Kind regards", "Yours sincerely", or the clinician's name. The greeting and sign-off are added automatically after you finish — anything you write of that kind is duplicated in the final letter. Start directly with what was found.
 
 FORMATTING RULES FOR SECTION 2 (Treatment options):
-- If Step 2 found multiple options: give each option its own short heading in the form "### Option 1: <short name>" (numbered in the order the source presents them), followed by 1-3 plain-English sentences describing what it involves, then a line stating its cost exactly as given, e.g. "Estimated cost: £1,106." Only add a short bullet list under an option for benefits/considerations (e.g. lifespan, appearance, invasiveness) if the source itself distinguishes them for that option — never invent generic pros/cons.
+- If Step 2 found multiple options: give each option its own short heading in the form "### Option 1: <short name>" (numbered in the order the source presents them), followed by 1-3 plain-English sentences describing what it involves, then a line stating its cost exactly as given, e.g. "Estimated cost: £1,106."
+- CARRY MATERIAL PROPERTIES INTO EVERY OPTION THAT USES THAT MATERIAL. If Step 1 recorded a property for a material — how long it lasts, whether it needs tooth preparation, its appearance or durability — it MUST appear in each option using that material, even though the notes state it only once and somewhere else entirely (typically in the discussion, not in the numbered option). The patient is choosing between these options largely on how long each lasts, so a stated lifespan is never optional. If the notes give a lifespan for one material, the option using the other material must carry its stated lifespan too — never state one and omit the other.
+- These properties may be written as a short bullet list under the option or folded into its sentences, whichever reads better. Include only properties the source actually states — never invent generic pros/cons.
 - If there is only one option: describe it in prose. Still state its cost exactly as given if the source contains one. Do not add sub-headings for a single option.
 - Every cost/fee figure present in the source MUST appear next to its matching option — never drop pricing that was explicitly given, even if it feels repetitive.
 
@@ -155,6 +158,7 @@ Before finalizing, silently confirm:
 - Every tooth code in the letter appears somewhere in the source notes. You have not introduced a tooth the notes never mention.
 - No risk rating has been written up as a present condition: if the notes say only "caries risk: high", the letter does not claim any tooth has decay, a cavity, or a carious lesion.
 - Every reason given for a treatment is the reason the notes give. You have not swapped in a more typical-sounding one, and treatments the notes leave unexplained are left unexplained.
+- Every material property from Step 1 — lifespan, tooth preparation, appearance, durability — appears in each option using that material. In particular, if the notes give a lifespan for BOTH materials, both lifespans are in the letter; you have not stated one and dropped the other.
 - Every clinical term has an inline plain-English explanation at first use, without altering tooth codes, treatment names, or diagnoses.
 - The letter is under {word_limit} words.
 - There is NO salutation, opening thank-you, or sign-off — the text begins with what was found and ends with the next steps.
