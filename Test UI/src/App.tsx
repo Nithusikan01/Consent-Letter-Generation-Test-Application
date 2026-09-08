@@ -5,7 +5,6 @@ import {
   AppBar,
   Box,
   Container,
-  Divider,
   Paper,
   Stack,
   Toolbar,
@@ -14,11 +13,10 @@ import {
 import { LetterForm } from './components/LetterForm'
 import { TestCaseSelector } from './components/TestCaseSelector'
 import { GeneratedLetterView } from './components/GeneratedLetterView'
-import { FeedbackForm } from './components/FeedbackForm'
-import { generatePatientLetter, submitFeedback } from './api/letterApi'
+import { generatePatientLetter } from './api/letterApi'
 import { testCases } from './data/testCases'
 import { emptyFormValues } from './types'
-import type { FeedbackData, GenerateLetterResponse, LetterFormValues } from './types'
+import type { GenerateLetterResponse, LetterFormValues } from './types'
 
 function SectionCard({
   step,
@@ -99,16 +97,6 @@ function App() {
     })
   }
 
-  const handleFeedbackSubmit = async (feedback: FeedbackData) => {
-    if (!generatedLetter) return
-    await submitFeedback({
-      feedback,
-      formValues,
-      letterHtml: generatedLetter.html,
-      submittedAt: new Date().toISOString(),
-    })
-  }
-
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
       <AppBar position="static" color="primary" elevation={0}>
@@ -124,50 +112,77 @@ function App() {
         </Toolbar>
       </AppBar>
 
-      <Container maxWidth="md" sx={{ py: { xs: 3, sm: 5 } }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 3, sm: 5 } }}>
         <Stack spacing={4}>
           <Alert severity="info" variant="outlined">
-            Select a test case or enter your own notes, generate a letter, then read it against
-            the original notes and leave feedback. This tool is for evaluation only — do not
-            enter real patient information.
+            Select a test case or enter your own notes, then generate a letter and read it
+            against the original notes. This tool is for evaluation only — do not enter real
+            patient information.
           </Alert>
 
-          <div ref={formSectionRef}>
-            <SectionCard step={1} title="Choose a test case or enter notes">
-              <TestCaseSelector selectedId={selectedTestCaseId} onSelect={handleSelectTestCase} />
-            </SectionCard>
-          </div>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', md: 'row' },
+              alignItems: 'flex-start',
+              gap: 4,
+            }}
+          >
+            <Stack spacing={4} sx={{ width: '100%', flex: { md: '0 0 45%' } }}>
+              <div ref={formSectionRef}>
+                <SectionCard step={1} title="Enter patient details">
+                  <Stack spacing={3}>
+                    <TestCaseSelector selectedId={selectedTestCaseId} onSelect={handleSelectTestCase} />
+                    <LetterForm
+                      values={formValues}
+                      onChange={setFormValues}
+                      onSubmit={handleGenerate}
+                      loading={loading}
+                    />
+                    {error && <Alert severity="error">{error}</Alert>}
+                  </Stack>
+                </SectionCard>
+              </div>
 
-          <SectionCard step={2} title="Generate the patient letter">
-            <LetterForm
-              values={formValues}
-              onChange={setFormValues}
-              onSubmit={handleGenerate}
-              loading={loading}
-            />
-            {error && (
-              <Alert severity="error" sx={{ mt: 2 }}>
-                {error}
-              </Alert>
-            )}
-          </SectionCard>
+              {generatedLetter && (
+                <Box sx={{ display: { xs: 'block', md: 'none' } }} ref={letterSectionRef}>
+                  <SectionCard step={2} title="Generated patient letter">
+                    <GeneratedLetterView
+                      html={generatedLetter.html}
+                      onGenerateAgain={handleGenerateAgain}
+                    />
+                  </SectionCard>
+                </Box>
+              )}
+            </Stack>
 
-          {generatedLetter && (
-            <div ref={letterSectionRef}>
-              <SectionCard step={3} title="Generated patient letter">
-                <GeneratedLetterView html={generatedLetter.html} onGenerateAgain={handleGenerateAgain} />
-              </SectionCard>
-            </div>
-          )}
-
-          {generatedLetter && (
-            <>
-              <Divider />
-              <SectionCard step={4} title="Give feedback on this letter">
-                <FeedbackForm key={generatedLetter.html} onSubmit={handleFeedbackSubmit} />
-              </SectionCard>
-            </>
-          )}
+            <Box sx={{ width: '100%', flex: { md: '1 1 55%' }, display: { xs: 'none', md: 'block' } }}>
+              {generatedLetter ? (
+                <SectionCard step={2} title="Generated patient letter">
+                  <GeneratedLetterView
+                    html={generatedLetter.html}
+                    onGenerateAgain={handleGenerateAgain}
+                  />
+                </SectionCard>
+              ) : (
+                <Paper
+                  variant="outlined"
+                  sx={{
+                    minHeight: 320,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    p: 4,
+                    textAlign: 'center',
+                  }}
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    Your generated letter will appear here.
+                  </Typography>
+                </Paper>
+              )}
+            </Box>
+          </Box>
         </Stack>
       </Container>
     </Box>

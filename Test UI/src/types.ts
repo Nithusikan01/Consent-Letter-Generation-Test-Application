@@ -24,31 +24,6 @@ export interface TestCase {
   values: LetterFormValues
 }
 
-export type YesNoSomewhat = 'yes' | 'somewhat' | 'no' | ''
-export type YesNo = 'yes' | 'no' | ''
-
-export interface FeedbackData {
-  overallRating: number | null
-  languageEasy: YesNoSomewhat
-  accurateToNotes: YesNoSomewhat
-  missingImportant: YesNo
-  missingDetail: string
-  unnecessaryOrIncorrect: YesNo
-  unnecessaryDetail: string
-  comments: string
-}
-
-export const emptyFeedback: FeedbackData = {
-  overallRating: null,
-  languageEasy: '',
-  accurateToNotes: '',
-  missingImportant: '',
-  missingDetail: '',
-  unnecessaryOrIncorrect: '',
-  unnecessaryDetail: '',
-  comments: '',
-}
-
 export const emptyFormValues: LetterFormValues = {
   patientName: '',
   clinicianName: '',
