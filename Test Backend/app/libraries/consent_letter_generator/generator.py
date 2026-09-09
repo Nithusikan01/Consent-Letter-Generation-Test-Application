@@ -6,180 +6,6 @@ from .post_processor import MarkdownPostProcessor
 from .models import LetterRequest, LetterResponse
 
 
-# Letter styles. The clinical rules of the prompt are identical for both — only
-# the presentation of each section's content differs, so the two styles are
-# built from ONE template with these fragments swapped in. Keeping a single
-# template means a fix to a grounding or tooth-mapping rule applies to both
-# styles at once, instead of having to be made twice and drifting apart.
-LETTER_STYLES = {
-    "standard": {
-        "label": "Standard",
-        "description": "Paragraphs throughout, with the treatment options set out as bullets so they can be compared.",
-        "content_rule": (
-            'The content inside each section is written as flowing paragraphs of plain English — short sentences joined '
-            'into a paragraph that reads naturally when read aloud. Patients find continuous prose easier to read than '
-            'fragmented lists, so do NOT use bullet points in the findings, discussion, next steps, recommendations or '
-            'homecare sections. There is ONE exception: the "## Treatment Options" section, where the patient is '
-            'weighing choices against each other and bullet points are required — see the formatting rules below. '
-            'Section headings are used throughout, in both cases.'
-        ),
-        "findings_rule": (
-            "Write the findings as a flowing paragraph rather than a list — every finding still has to be there, it is "
-            "only the presentation that changes."
-        ),
-        "option_rule": (
-            "- Under each option's sub-heading, set out what it involves as SHORT BULLET POINTS — which teeth, which "
-            "material, what the treatment includes, how long the material lasts, what preparation it needs, and what "
-            "extra stages it involves. This is the ONE place in the letter where bullets are used, because the patient "
-            "is comparing the options side by side and a dense paragraph is much harder to weigh up.\n"
-            "- If the notes describe only ONE treatment path, there is nothing to compare: describe it in paragraphs "
-            "under \"## Treatment Recommended\", with no bullet points and no \"### Option N\" sub-headings."
-        ),
-        "writing_rule": (
-            "- Use short sentences joined into short paragraphs everywhere except the treatment options, which are "
-            "bulleted. Do not use bullet points or numbered lists in any other section."
-        ),
-        "example": """CORRECT — note that every section is written as paragraphs EXCEPT the treatment options, which are bulleted so the patient can compare them, each with its cost on its own line:
-
-## Examination Findings
-Your oral hygiene is good. The LR5 and LL5 need crowns, and the UR6 needs a filling.
-
-## Discussion
-We talked through the two crown materials. A metal crown lasts about 20 years but needs more tooth preparation, while a ceramic crown lasts about 10 years and needs less. To match the LR5, I would also crown the LR4.
-
-## Treatment Options
-
-### Option 1: Crowns and a filling
-- Crowns on the LR4, LR5 and LL5.
-- A filling on the UR6.
-
-Estimated cost: £820.
-
-### Option 2: Crowns on all four teeth
-- Crowns on the LR4, LR5, LL5 and UR6.
-- A longer-lasting result.
-
-Estimated cost: £2,400.
-
-You have not yet decided which option to go for.
-
-## Next Steps
-A review appointment has been booked to decide which option you would like.
-
-## Homecare Advice
-Cutting down on fizzy drinks will help protect your teeth.""",
-    },
-    "bulleted": {
-        "label": "Bulleted",
-        "description": "Findings and options broken into short bullet points for quick scanning.",
-        "content_rule": (
-            'The content inside each section is plain English — short sentences and short paragraphs — and may use bullet '
-            'points wherever a list is clearer to read than a sentence (several findings, several pieces of advice, the '
-            'parts of a planning stage). "Plain prose" describes how the content should READ; it is never a reason to '
-            'leave out a section heading, and never a reason to cram a list into one long sentence.'
-        ),
-        "findings_rule": "Where there are several distinct findings, list them as bullet points.",
-        "option_rule": (
-            "- Under each option's sub-heading, describe what it involves — which teeth, which material, what the "
-            "treatment includes. Use bullet points wherever they make the option easier to compare (what is covered, how "
-            "long the material lasts, what preparation it needs, what extra stages it involves). A dense paragraph is "
-            "harder to weigh up than a short list."
-        ),
-        "writing_rule": (
-            "- Use short sentences and short paragraphs throughout, and bullet points wherever a list reads more clearly "
-            "than a sentence."
-        ),
-        "example": """CORRECT — note the section headings, the bullet points inside an option, and the cost on its own line:
-
-## Examination Findings
-- Your oral hygiene is good.
-- The LR5 and LL5 need crowns, and the UR6 needs a filling.
-
-## Discussion
-We talked through the two crown materials. A metal crown lasts about 20 years but needs more tooth preparation, while a ceramic crown lasts about 10 years and needs less. To match the LR5, I would also crown the LR4.
-
-## Treatment Options
-
-### Option 1: Crowns and a filling
-- Crowns on the LR4, LR5 and LL5.
-- A filling on the UR6.
-
-Estimated cost: £820.
-
-### Option 2: Crowns on all four teeth
-- Crowns on the LR4, LR5, LL5 and UR6.
-- A longer-lasting result.
-
-Estimated cost: £2,400.
-
-You have not yet decided which option to go for.
-
-## Next Steps
-A review appointment has been booked to decide which option you would like.
-
-## Homecare Advice
-Cutting down on fizzy drinks will help protect your teeth.""",
-    },
-    "narrative": {
-        "label": "Narrative",
-        "description": "The same letter written as flowing paragraphs, with no bullet points.",
-        "content_rule": (
-            'The content inside each section is written as flowing paragraphs of plain English — short sentences joined '
-            'into a paragraph that reads naturally when spoken aloud. Do NOT use bullet points, numbered lists, or dashes '
-            'to split the content into fragments. Where several findings or several features of an option belong '
-            'together, write them as connected sentences within one paragraph. This applies to the CONTENT only: the '
-            'section headings themselves stay exactly as specified below.'
-        ),
-        "findings_rule": (
-            "Where there are several distinct findings, join them into a flowing paragraph rather than listing them — "
-            "every finding still has to be there, it is only the presentation that changes."
-        ),
-        "option_rule": (
-            "- Under each option's sub-heading, describe what it involves in flowing sentences — which teeth, which "
-            "material, what the treatment includes, how long the material lasts, what preparation it needs, and what "
-            "extra stages it involves. Write this as a short paragraph rather than a bullet list, keeping the sentences "
-            "short so the patient can still weigh the options against each other."
-        ),
-        "writing_rule": (
-            "- Use short sentences joined into short paragraphs. Do not use bullet points, numbered lists or dashes "
-            "anywhere in the letter body — the only markdown is the section and option headings."
-        ),
-        "example": """CORRECT — note the section headings, the flowing paragraphs inside each option, and the cost on its own line:
-
-## Examination Findings
-Your oral hygiene is good. The LR5 and LL5 need crowns, and the UR6 needs a filling.
-
-## Discussion
-We talked through the two crown materials. A metal crown lasts about 20 years but needs more tooth preparation, while a ceramic crown lasts about 10 years and needs less. To match the LR5, I would also crown the LR4.
-
-## Treatment Options
-
-### Option 1: Crowns and a filling
-This option places crowns on the LR4, LR5 and LL5, and a filling on the UR6.
-
-Estimated cost: £820.
-
-### Option 2: Crowns on all four teeth
-This option places crowns on the LR4, LR5, LL5 and UR6, and gives a longer-lasting result.
-
-Estimated cost: £2,400.
-
-You have not yet decided which option to go for.
-
-## Next Steps
-A review appointment has been booked to decide which option you would like.
-
-## Homecare Advice
-Cutting down on fizzy drinks will help protect your teeth.""",
-    },
-}
-
-# "standard" is the format the dentists asked for: prose letters, with bullets
-# used only where multiple treatment options need to be compared. The other two
-# are kept selectable for comparison.
-DEFAULT_LETTER_STYLE = "standard"
-
-
 class ConsentLetterGenerator:
     """
     A library for generating dental consent letters using AI models.
@@ -199,7 +25,7 @@ class ConsentLetterGenerator:
             base_url=base_url
         )
         self.model = model
-        self.prompt_template_base = """
+        self.prompt_template = """
 You are drafting a patient letter that summarizes a dental consultation and its recommended treatment, for a patient with no medical background (target reading age: 12).
 
 ═══════════════════════════════════════
@@ -259,12 +85,12 @@ Look at what you extracted in Step 1:
 ═══════════════════════════════════════
 STEP 3 — WRITE THE LETTER
 ═══════════════════════════════════════
-Using ONLY the facts from Step 1, write the BODY of a letter using the section structure below, in this order. EVERY section gets its own heading, written as "## <Section name>" on its own line.
+Using ONLY the facts from Step 1, write the BODY of a letter using the section structure below, in this order. EVERY section gets its own heading, written as "## <Section name>" on its own line — always exactly TWO hash characters, in every letter, whether or not it contains treatment options. Only the "### Option N" sub-headings inside Treatment Options use three.
 
-<<STYLE_CONTENT_RULE>>
+The content inside each section is written as flowing paragraphs of plain English — short sentences joined into a paragraph that reads naturally when read aloud. Patients find continuous prose easier to read than fragmented lists, so do NOT use bullet points in the findings, discussion, next steps, recommendations or homecare sections. There is ONE exception: the "## Treatment Options" section, where the patient is weighing choices against each other and bullet points are required — see the formatting rules below. Section headings are used throughout, in both cases.
 
 ## Examination Findings
-What was found when the patient was examined. Include EVERY finding and risk rating from Step 1 — the bite/occlusion and any measurement such as an overjet are findings and belong here just as much as the teeth themselves. Do not shorten this section by dropping findings; a finding the notes recorded is a finding the patient is told about. <<STYLE_FINDINGS_RULE>>
+What was found when the patient was examined. Include EVERY finding and risk rating from Step 1 — the bite/occlusion and any measurement such as an overjet are findings and belong here just as much as the teeth themselves. Do not shorten this section by dropping findings; a finding the notes recorded is a finding the patient is told about. Write the findings as a flowing paragraph rather than a list — every finding still has to be there, it is only the presentation that changes.
 
 ## Discussion
 What was talked through with the patient after the examination: what the findings mean for them, why treatment is being suggested, and any comparison of materials or approaches the notes record (for example how long each material lasts, or which needs tooth preparation). Use only the reasoning present in the source, never your own.
@@ -289,7 +115,10 @@ DO NOT write a salutation, greeting, opening thank-you, or sign-off. Specificall
 FORMATTING RULES FOR THE "## Treatment Options" SECTION:
 - If Step 2 found multiple options: under the "## Treatment Options" heading, give each option its own sub-heading on its own line, written EXACTLY as "### Option 1: <short name>" — three hash characters, then the option number, then a short name (numbered in the order the source presents them).
 - The "### Option N" sub-heading is required for every option. Do NOT instead write the option name in bold ("**Option 1: ...**") or as a plain sentence. Each option must be visibly set apart from the others, because the patient is comparing them side by side.
-<<STYLE_OPTION_RULE>>
+- BULLET POINTS ARE USED ONLY WHEN THERE ARE TWO OR MORE OPTIONS TO COMPARE. Whether this section is bulleted depends entirely on how many treatment options the notes describe — decide that first, before writing anything in this section.
+- TWO OR MORE OPTIONS: under each option's "### Option N" sub-heading, set out what it involves as SHORT BULLET POINTS — which teeth, which material, what the treatment includes, how long the material lasts, what preparation it needs, and what extra stages it involves. This is the ONE place in the whole letter where bullets are allowed, because the patient is comparing the options side by side and a dense paragraph is much harder to weigh up.
+- EXACTLY ONE TREATMENT PATH: there is nothing to compare, so the letter contains NO BULLET POINTS AT ALL. Write the treatment as ordinary paragraphs under a "## Treatment Recommended" heading — no bullet list, no dashes, and no "### Option N" sub-headings. Do not bullet it merely because it is the treatment section; the bullets exist to support a comparison, and with one option there is no comparison to support.
+- Section headings stay at TWO hashes ("## Examination Findings", "## Discussion", "## Treatment Recommended", and so on) whether or not the letter has options. The absence of "### Option N" sub-headings is not a reason to demote the section headings to three hashes.
 - STATE THE COST OF EVERY OPTION CLEARLY, on its own line at the end of that option, exactly as the notes give it — for example "Estimated cost: £1,106." Never round, merge or omit a figure, and never leave the patient to infer which option a price belongs to. If the notes give a price for an option, that price appears under that option.
 - CARRY MATERIAL PROPERTIES INTO EVERY OPTION THAT USES THAT MATERIAL. If Step 1 recorded a property for a material — how long it lasts, whether it needs tooth preparation, its appearance or durability — it MUST appear in each option using that material, even though the notes state it only once and somewhere else entirely (typically in the discussion, not in the numbered option). The patient is choosing between these options largely on how long each lasts, so a stated lifespan is never optional. If the notes give a lifespan for one material, the option using the other material must carry its stated lifespan too — never state one and omit the other.
 - Include only properties the source actually states — never invent generic pros/cons.
@@ -308,7 +137,67 @@ WRONG (never do this — UR6 is double-booked as both a crown and a filling, the
 
 **Option 1: Crowns and a filling** – This involves crowns on the LR4, LR5, LL5 and UR6, and a filling on the UR6 costing £820.
 
-<<STYLE_EXAMPLE>>
+CORRECT — note that every section is written as paragraphs EXCEPT the treatment options, which are bulleted so the patient can compare them, each with its cost on its own line:
+
+## Examination Findings
+Your oral hygiene is good. The LR5 and LL5 need crowns, and the UR6 needs a filling.
+
+## Discussion
+We talked through the two crown materials. A metal crown lasts about 20 years but needs more tooth preparation, while a ceramic crown lasts about 10 years and needs less. To match the LR5, I would also crown the LR4.
+
+## Treatment Options
+
+### Option 1: Crowns and a filling
+- Crowns on the LR4, LR5 and LL5.
+- A filling on the UR6.
+
+Estimated cost: £820.
+
+### Option 2: Crowns on all four teeth
+- Crowns on the LR4, LR5, LL5 and UR6.
+- A longer-lasting result.
+
+Estimated cost: £2,400.
+
+You have not yet decided which option to go for.
+
+## Next Steps
+A review appointment has been booked to decide which option you would like.
+
+## Homecare Advice
+Cutting down on fizzy drinks will help protect your teeth.
+
+═══════════════════════════════════════
+SECOND WORKED EXAMPLE — A LETTER WITH ONLY ONE TREATMENT PATH
+═══════════════════════════════════════
+Most letters describe a single treatment, not a choice. Those letters contain NO bullet points at all. Again these clinical facts are illustrative and must never be copied into a real letter.
+
+Patient notes: "O/E oh good. BWs show caries UR5 mesial, not into pulp. Dw pt - advised composite filling UR5 to remove the decay and restore the tooth. pt consented. cost £160. rv 6 months. advised to floss daily."
+
+CORRECT — one treatment, so nothing to compare: no bullet points anywhere, the treatment sits under "## Treatment Recommended", and the section headings are still TWO hashes:
+
+## Examination Findings
+Your oral hygiene is good. The x-rays show decay on the front surface of the UR5, which has not reached the nerve.
+
+## Discussion
+We talked about the decay on the UR5 and agreed that a composite filling is needed to remove it and rebuild the tooth. You gave your consent for this.
+
+## Treatment Recommended
+A composite filling will be placed on the UR5 to remove the decay and restore the tooth.
+
+Estimated cost: £160.
+
+## Next Steps
+A review appointment has been booked in six months.
+
+## Homecare Advice
+Flossing daily will help protect your teeth.
+
+WRONG for that same single-treatment letter (bullets used when there is nothing to compare, and the section headings demoted to three hashes):
+
+### Treatment Recommended
+- A composite filling placed on the UR5.
+- Removes the decay and restores the tooth.
 
 (There is no Recommendations section in this example because these notes record none — sections without content in the notes are simply left out.)
 
@@ -316,7 +205,7 @@ GENERAL WRITING RULES:
 - Write for a reader with no medical background — aim for a reading level a 12-year-old could follow comfortably.
 - The first time any clinical term appears, explain it immediately in plain words, e.g. "gum disease (gingivitis)." Use the glossary below where it applies. Never use an abbreviation without spelling it out in full at first use.
 - Do not replace a specific tooth code (e.g. "UR1"), treatment name (e.g. "composite veneer," "root canal treatment"), or diagnosis with a vague substitute — only simplify genuine jargon, not clinical specifics.
-<<STYLE_WRITING_RULE>>
+- Use short sentences joined into short paragraphs everywhere except the treatment options, which are bulleted. Do not use bullet points or numbered lists in any other section.
 - Keep the full letter under {word_limit} words.
 - Tone: warm, professional, reassuring — never alarming, never clinical or cold.
 
@@ -361,6 +250,7 @@ Before finalizing, silently confirm:
 - Every price/fee stated in the source appears in the letter, exactly as written.
 - Every section present has a "## <Section name>" heading, following the Step 3 structure and order: Examination Findings, Discussion, Treatment Options, Next Steps, Recommendations, Homecare Advice. Sections the notes give no content for are absent entirely — none has been padded with invented content.
 - No section says there is nothing to report. If a section would have contained a line like "(There is no home-care advice recorded.)" or "None recorded.", that whole section — heading included — has been deleted instead.
+- Count the treatment options first, then check the bullets against that count. TWO OR MORE options: bullet points appear inside the Treatment Options section and nowhere else. EXACTLY ONE treatment path: the letter contains NO bullet points at all, and the treatment sits in paragraphs under "## Treatment Recommended". If you bulleted a single treatment path, rewrite it as paragraphs.
 - If multiple options were present in the source, they sit under "## Treatment Options", and each has its own "### Option N: ..." sub-heading — three hash characters, not bold text and not a plain sentence.
 - Every option states its cost on its own line, exactly as the notes give it, and the price sits under the option it belongs to.
 - Within each option, re-read every tooth code you wrote: no tooth appears under two different treatments, and each one matches the tooth map from Step 1. If a tooth appears twice in the same option, you have mistaken a flat "teeth involved" list for a treatment list — fix it.
@@ -393,39 +283,6 @@ Consent Templates:
 Additional notes:
 {additional_notes}
 """
-
-        # Default style, kept as `prompt_template` so existing callers are unaffected.
-        self.prompt_template = self.build_prompt_template(DEFAULT_LETTER_STYLE)
-
-
-
-    def build_prompt_template(self, style: str = DEFAULT_LETTER_STYLE) -> str:
-        """
-        Build the prompt for a letter style by substituting that style's
-        presentation fragments into the shared template.
-
-        Only the presentation of each section's content differs between styles;
-        every clinical rule — grounding, tooth mapping, tooth counts, risk vs
-        finding, material properties — is shared, so a fix to any of those
-        applies to all styles at once.
-        """
-        if style not in LETTER_STYLES:
-            raise ValueError(
-                f"Unknown letter style {style!r}. Available: {', '.join(sorted(LETTER_STYLES))}"
-            )
-        fragments = LETTER_STYLES[style]
-        template = self.prompt_template_base
-        for token, key in (
-            ("<<STYLE_CONTENT_RULE>>", "content_rule"),
-            ("<<STYLE_FINDINGS_RULE>>", "findings_rule"),
-            ("<<STYLE_OPTION_RULE>>", "option_rule"),
-            ("<<STYLE_WRITING_RULE>>", "writing_rule"),
-            ("<<STYLE_EXAMPLE>>", "example"),
-        ):
-            if token not in template:
-                raise ValueError(f"Prompt template is missing the {token} placeholder")
-            template = template.replace(token, fragments[key])
-        return template
 
     @staticmethod
     def _has_multiple_options(patient_notes: str) -> bool:
@@ -505,6 +362,36 @@ Additional notes:
 
         return "\n\n".join(paragraphs).strip()
 
+    _HEADING = re.compile(r'(?m)^(#{2,6})\s+(\S.*?)\s*$')
+
+    @classmethod
+    def normalize_section_headings(cls, text: str) -> str:
+        """
+        Force section headings to level 2 ("## Examination Findings").
+
+        Letters with no treatment options tend to come back with every heading at
+        level 3, because the model demotes them once there are no "### Option N"
+        sub-headings to sit under. Prompt wording did not fix this reliably, and
+        the level is a fixed formatting invariant rather than a judgement call, so
+        it is enforced here.
+
+        Only applied when the letter has no level-2 headings at all and none of
+        its headings is an "Option N" sub-heading — i.e. when every heading present
+        is really a section heading that has been demoted as a group.
+        """
+        if not text:
+            return text
+
+        headings = cls._HEADING.findall(text)
+        if not headings:
+            return text
+        if any(len(hashes) == 2 for hashes, _ in headings):
+            return text  # section headings already at the right level
+        if any(re.match(r'(?i)option\s*\d', title) for _, title in headings):
+            return text  # option sub-headings present; not a flat demotion
+
+        return cls._HEADING.sub(lambda m: f"## {m.group(2)}", text)
+
     @staticmethod
     def add_greeting_and_sign_off(processed_text: str, patient_name: str, surgeon_name: str):
         return f"Dear {patient_name},\n\nThank you for attending your recent dental appointment. I wanted to provide a brief summary of what we covered.\n\n{processed_text}\n\nI've included a few easy-to-read guides on the treatments we talked about, so you can review them at your convenience. We're here to support you at every step and happy to answer any questions you may have.\n\nWarm regards,\n\n{surgeon_name}"
@@ -518,8 +405,7 @@ Additional notes:
         patient_name: str,
         surgeon_name: str,
         use_post_processing: bool = True,
-        temperature: float = 0.0,
-        style: str = DEFAULT_LETTER_STYLE
+        temperature: float = 0.0
     ) -> Tuple[List[str], str, str]:
         """
         Generate a consent letter based on provided parameters.
@@ -533,14 +419,13 @@ Additional notes:
             surgeon_name: Surgeon's name
             use_post_processing: Whether to apply post-processing
             temperature: Model temperature for generation
-            style: Letter style — "bulleted" (default) or "narrative"
 
         Returns:
             Tuple of (sections, full_letter, processed_html)
         """
         word_limit = self._compute_word_limit(patient_notes)
 
-        prompt = self.build_prompt_template(style).format(
+        prompt = self.prompt_template.format(
             patient_notes=patient_notes or "",
             treatment_plan_items="\n".join(treatment_plan_items or []),
             medicube_templates="\n".join(medicube_templates or []),
@@ -570,6 +455,7 @@ Additional notes:
             processed_text = text
 
         processed_text = self.strip_greeting_and_sign_off(processed_text)
+        processed_text = self.normalize_section_headings(processed_text)
         processed_text = self.add_greeting_and_sign_off(processed_text, patient_name, surgeon_name)
 
         processed_sections = [s.strip() for s in processed_text.split("\n\n") if s.strip()]

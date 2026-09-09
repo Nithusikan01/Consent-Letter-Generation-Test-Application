@@ -15,8 +15,8 @@ import { TestCaseSelector } from './components/TestCaseSelector'
 import { GeneratedLetterView } from './components/GeneratedLetterView'
 import { generatePatientLetter } from './api/letterApi'
 import { testCases } from './data/testCases'
-import { defaultLetterStyle, emptyFormValues } from './types'
-import type { GenerateLetterResponse, LetterFormValues, LetterStyleId } from './types'
+import { emptyFormValues } from './types'
+import type { GenerateLetterResponse, LetterFormValues } from './types'
 
 function SectionCard({
   step,
@@ -60,7 +60,6 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [generatedLetter, setGeneratedLetter] = useState<GenerateLetterResponse | null>(null)
-  const [letterStyle, setLetterStyle] = useState<LetterStyleId>(defaultLetterStyle)
 
   const letterSectionRef = useRef<HTMLDivElement>(null)
   const formSectionRef = useRef<HTMLDivElement>(null)
@@ -78,7 +77,7 @@ function App() {
     setError(null)
     setGeneratedLetter(null)
     try {
-      const result = await generatePatientLetter(formValues, letterStyle)
+      const result = await generatePatientLetter(formValues)
       setGeneratedLetter(result)
       requestAnimationFrame(() => {
         letterSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -139,8 +138,6 @@ function App() {
                       onChange={setFormValues}
                       onSubmit={handleGenerate}
                       loading={loading}
-                      style={letterStyle}
-                      onStyleChange={setLetterStyle}
                     />
                     {error && <Alert severity="error">{error}</Alert>}
                   </Stack>
@@ -153,7 +150,6 @@ function App() {
                     <GeneratedLetterView
                       html={generatedLetter.html}
                       onGenerateAgain={handleGenerateAgain}
-                      style={generatedLetter.style}
                     />
                   </SectionCard>
                 </Box>
@@ -166,7 +162,6 @@ function App() {
                   <GeneratedLetterView
                     html={generatedLetter.html}
                     onGenerateAgain={handleGenerateAgain}
-                    style={generatedLetter.style}
                   />
                 </SectionCard>
               ) : (

@@ -1,26 +1,16 @@
 import type { ChangeEvent } from 'react'
-import { Box, Button, CircularProgress, Divider, Stack, TextField } from '@mui/material'
+import { Box, Button, CircularProgress, Stack, TextField } from '@mui/material'
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
-import { LetterStyleSelector } from './LetterStyleSelector'
-import type { LetterFormValues, LetterStyleId } from '../types'
+import type { LetterFormValues } from '../types'
 
 interface LetterFormProps {
   values: LetterFormValues
   onChange: (values: LetterFormValues) => void
   onSubmit: () => void
   loading: boolean
-  style: LetterStyleId
-  onStyleChange: (style: LetterStyleId) => void
 }
 
-export function LetterForm({
-  values,
-  onChange,
-  onSubmit,
-  loading,
-  style,
-  onStyleChange,
-}: LetterFormProps) {
+export function LetterForm({ values, onChange, onSubmit, loading }: LetterFormProps) {
   const isValid = values.patientName.trim() && values.clinicianName.trim() && values.patientNotes.trim()
 
   const setField = (field: keyof LetterFormValues) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -65,8 +55,6 @@ export function LetterForm({
           required
           disabled={loading}
         />
-        <Divider />
-        <LetterStyleSelector value={style} onChange={onStyleChange} disabled={loading} />
         <Box>
           <Button
             type="submit"

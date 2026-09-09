@@ -1,20 +1,18 @@
 # Consent letter prompt — v5
 
-## Letter styles
+## Format
 
-The generator offers three styles, selectable in the test UI and exposed as separate endpoints:
+Paragraphs throughout, with the treatment options set out as bullet points only
+when there are two or more of them to compare (Dr. Sahan, 2026-09-08: dentists
+find bulleted letters harder for patients to read; bullets are wanted only where
+options are being compared). With exactly one treatment path there is nothing to
+compare, so that section is written in paragraphs too, under a
+"## Treatment Recommended" heading with no "### Option N" sub-headings.
 
-| Style | Endpoint | Presentation |
-| --- | --- | --- |
-| `standard` (default) | `POST /test/generate-patient-letter` | Paragraphs throughout, with the treatment options set out as bullets so they can be compared. |
-| `bulleted` | `POST /test/generate-patient-letter-bulleted` | Bullet points used throughout, including the findings. Comparison only. |
-| `narrative` | `POST /test/generate-patient-letter-narrative` | Flowing paragraphs everywhere, including the options. Comparison only. |
-
-**`standard` is the format the dentists asked for** (Dr. Sahan, 2026-09-08): bulleted letters are harder for patients to read, so the letter is prose, and bullets are used only where multiple treatment options need to be compared. The other two are retained so the formats can be viewed side by side, and are expected to be removed once the choice is confirmed.
-
-**All three are clinically identical.** Same sections, same grounding rules, same tooth mapping, same tooth counts, same cost handling — only the presentation of each section's content differs. So all three are built from the ONE template reproduced below, with five presentation fragments swapped in (`LETTER_STYLES` in `generator.py`). A fix to any clinical rule therefore applies to every style at once, rather than having to be made three times in copies that would inevitably drift apart.
-
-The template below is shown with the **bulleted** fragments in place. The five fragments that differ are marked in `generator.py` by the placeholders `<<STYLE_CONTENT_RULE>>`, `<<STYLE_FINDINGS_RULE>>`, `<<STYLE_OPTION_RULE>>`, `<<STYLE_WRITING_RULE>>` and `<<STYLE_EXAMPLE>>`. Section and option headings are unchanged across all three styles.
+This was previously offered as one of three selectable styles ("standard",
+"bulleted", "narrative"). The other two have been removed, along with the style
+selector in the test UI and the extra backend endpoints, now that the format is
+confirmed. The template below is the single prompt in current use.
 
 ## Feedback addressed
 
@@ -95,12 +93,12 @@ Look at what you extracted in Step 1:
 ═══════════════════════════════════════
 STEP 3 — WRITE THE LETTER
 ═══════════════════════════════════════
-Using ONLY the facts from Step 1, write the BODY of a letter using the section structure below, in this order. EVERY section gets its own heading, written as "## <Section name>" on its own line.
+Using ONLY the facts from Step 1, write the BODY of a letter using the section structure below, in this order. EVERY section gets its own heading, written as "## <Section name>" on its own line — always exactly TWO hash characters, in every letter, whether or not it contains treatment options. Only the "### Option N" sub-headings inside Treatment Options use three.
 
-The content inside each section is plain English — short sentences and short paragraphs — and may use bullet points wherever a list is clearer to read than a sentence (several findings, several pieces of advice, the parts of a planning stage). "Plain prose" describes how the content should READ; it is never a reason to leave out a section heading, and never a reason to cram a list into one long sentence.
+The content inside each section is written as flowing paragraphs of plain English — short sentences joined into a paragraph that reads naturally when read aloud. Patients find continuous prose easier to read than fragmented lists, so do NOT use bullet points in the findings, discussion, next steps, recommendations or homecare sections. There is ONE exception: the "## Treatment Options" section, where the patient is weighing choices against each other and bullet points are required — see the formatting rules below. Section headings are used throughout, in both cases.
 
 ## Examination Findings
-What was found when the patient was examined. Include EVERY finding and risk rating from Step 1 — the bite/occlusion and any measurement such as an overjet are findings and belong here just as much as the teeth themselves. Do not shorten this section by dropping findings; a finding the notes recorded is a finding the patient is told about. Where there are several distinct findings, list them as bullet points.
+What was found when the patient was examined. Include EVERY finding and risk rating from Step 1 — the bite/occlusion and any measurement such as an overjet are findings and belong here just as much as the teeth themselves. Do not shorten this section by dropping findings; a finding the notes recorded is a finding the patient is told about. Write the findings as a flowing paragraph rather than a list — every finding still has to be there, it is only the presentation that changes.
 
 ## Discussion
 What was talked through with the patient after the examination: what the findings mean for them, why treatment is being suggested, and any comparison of materials or approaches the notes record (for example how long each material lasts, or which needs tooth preparation). Use only the reasoning present in the source, never your own.
@@ -125,7 +123,10 @@ DO NOT write a salutation, greeting, opening thank-you, or sign-off. Specificall
 FORMATTING RULES FOR THE "## Treatment Options" SECTION:
 - If Step 2 found multiple options: under the "## Treatment Options" heading, give each option its own sub-heading on its own line, written EXACTLY as "### Option 1: <short name>" — three hash characters, then the option number, then a short name (numbered in the order the source presents them).
 - The "### Option N" sub-heading is required for every option. Do NOT instead write the option name in bold ("**Option 1: ...**") or as a plain sentence. Each option must be visibly set apart from the others, because the patient is comparing them side by side.
-- Under each option's sub-heading, describe what it involves — which teeth, which material, what the treatment includes. Use bullet points wherever they make the option easier to compare (what is covered, how long the material lasts, what preparation it needs, what extra stages it involves). A dense paragraph is harder to weigh up than a short list.
+- BULLET POINTS ARE USED ONLY WHEN THERE ARE TWO OR MORE OPTIONS TO COMPARE. Whether this section is bulleted depends entirely on how many treatment options the notes describe — decide that first, before writing anything in this section.
+- TWO OR MORE OPTIONS: under each option's "### Option N" sub-heading, set out what it involves as SHORT BULLET POINTS — which teeth, which material, what the treatment includes, how long the material lasts, what preparation it needs, and what extra stages it involves. This is the ONE place in the whole letter where bullets are allowed, because the patient is comparing the options side by side and a dense paragraph is much harder to weigh up.
+- EXACTLY ONE TREATMENT PATH: there is nothing to compare, so the letter contains NO BULLET POINTS AT ALL. Write the treatment as ordinary paragraphs under a "## Treatment Recommended" heading — no bullet list, no dashes, and no "### Option N" sub-headings. Do not bullet it merely because it is the treatment section; the bullets exist to support a comparison, and with one option there is no comparison to support.
+- Section headings stay at TWO hashes ("## Examination Findings", "## Discussion", "## Treatment Recommended", and so on) whether or not the letter has options. The absence of "### Option N" sub-headings is not a reason to demote the section headings to three hashes.
 - STATE THE COST OF EVERY OPTION CLEARLY, on its own line at the end of that option, exactly as the notes give it — for example "Estimated cost: £1,106." Never round, merge or omit a figure, and never leave the patient to infer which option a price belongs to. If the notes give a price for an option, that price appears under that option.
 - CARRY MATERIAL PROPERTIES INTO EVERY OPTION THAT USES THAT MATERIAL. If Step 1 recorded a property for a material — how long it lasts, whether it needs tooth preparation, its appearance or durability — it MUST appear in each option using that material, even though the notes state it only once and somewhere else entirely (typically in the discussion, not in the numbered option). The patient is choosing between these options largely on how long each lasts, so a stated lifespan is never optional. If the notes give a lifespan for one material, the option using the other material must carry its stated lifespan too — never state one and omit the other.
 - Include only properties the source actually states — never invent generic pros/cons.
@@ -138,43 +139,73 @@ Patient notes: "O/E oh good. crowns needed on the LR5 and LL5, and a filling on 
 Step 1 tooth map, taken from the DETAILED sentence (not the flat list):
 - crown → LR5, LL5, LR4
 - filling → UR6
-
 The flat list in option 1 ("LR4, LR5, LL5 and UR6") is only the set of teeth INVOLVED. UR6 stays a filling there. In option 2 the source explicitly says crowns on all four, so UR6 becomes a crown in that option only.
 
 WRONG (never do this — UR6 is double-booked as both a crown and a filling, the option name is bold instead of a "### Option N" sub-heading, and the cost is buried mid-sentence):
 
-> **Option 1: Crowns and a filling** – This involves crowns on the LR4, LR5, LL5 and UR6, and a filling on the UR6 costing £820.
+**Option 1: Crowns and a filling** – This involves crowns on the LR4, LR5, LL5 and UR6, and a filling on the UR6 costing £820.
 
-CORRECT — note the section headings, the bullet points inside an option, and the cost on its own line:
+CORRECT — note that every section is written as paragraphs EXCEPT the treatment options, which are bulleted so the patient can compare them, each with its cost on its own line:
 
-> ## Examination Findings
-> - Your oral hygiene is good.
-> - The LR5 and LL5 need crowns, and the UR6 needs a filling.
->
-> ## Discussion
-> We talked through the two crown materials. A metal crown lasts about 20 years but needs more tooth preparation, while a ceramic crown lasts about 10 years and needs less. To match the LR5, I would also crown the LR4.
->
-> ## Treatment Options
->
-> ### Option 1: Crowns and a filling
-> - Crowns on the LR4, LR5 and LL5.
-> - A filling on the UR6.
->
-> Estimated cost: £820.
->
-> ### Option 2: Crowns on all four teeth
-> - Crowns on the LR4, LR5, LL5 and UR6.
-> - A longer-lasting result.
->
-> Estimated cost: £2,400.
->
-> You have not yet decided which option to go for.
->
-> ## Next Steps
-> A review appointment has been booked to decide which option you would like.
->
-> ## Homecare Advice
-> Cutting down on fizzy drinks will help protect your teeth.
+## Examination Findings
+Your oral hygiene is good. The LR5 and LL5 need crowns, and the UR6 needs a filling.
+
+## Discussion
+We talked through the two crown materials. A metal crown lasts about 20 years but needs more tooth preparation, while a ceramic crown lasts about 10 years and needs less. To match the LR5, I would also crown the LR4.
+
+## Treatment Options
+
+### Option 1: Crowns and a filling
+- Crowns on the LR4, LR5 and LL5.
+- A filling on the UR6.
+
+Estimated cost: £820.
+
+### Option 2: Crowns on all four teeth
+- Crowns on the LR4, LR5, LL5 and UR6.
+- A longer-lasting result.
+
+Estimated cost: £2,400.
+
+You have not yet decided which option to go for.
+
+## Next Steps
+A review appointment has been booked to decide which option you would like.
+
+## Homecare Advice
+Cutting down on fizzy drinks will help protect your teeth.
+
+═══════════════════════════════════════
+SECOND WORKED EXAMPLE — A LETTER WITH ONLY ONE TREATMENT PATH
+═══════════════════════════════════════
+Most letters describe a single treatment, not a choice. Those letters contain NO bullet points at all. Again these clinical facts are illustrative and must never be copied into a real letter.
+
+Patient notes: "O/E oh good. BWs show caries UR5 mesial, not into pulp. Dw pt - advised composite filling UR5 to remove the decay and restore the tooth. pt consented. cost £160. rv 6 months. advised to floss daily."
+
+CORRECT — one treatment, so nothing to compare: no bullet points anywhere, the treatment sits under "## Treatment Recommended", and the section headings are still TWO hashes:
+
+## Examination Findings
+Your oral hygiene is good. The x-rays show decay on the front surface of the UR5, which has not reached the nerve.
+
+## Discussion
+We talked about the decay on the UR5 and agreed that a composite filling is needed to remove it and rebuild the tooth. You gave your consent for this.
+
+## Treatment Recommended
+A composite filling will be placed on the UR5 to remove the decay and restore the tooth.
+
+Estimated cost: £160.
+
+## Next Steps
+A review appointment has been booked in six months.
+
+## Homecare Advice
+Flossing daily will help protect your teeth.
+
+WRONG for that same single-treatment letter (bullets used when there is nothing to compare, and the section headings demoted to three hashes):
+
+### Treatment Recommended
+- A composite filling placed on the UR5.
+- Removes the decay and restores the tooth.
 
 (There is no Recommendations section in this example because these notes record none — sections without content in the notes are simply left out.)
 
@@ -182,7 +213,7 @@ GENERAL WRITING RULES:
 - Write for a reader with no medical background — aim for a reading level a 12-year-old could follow comfortably.
 - The first time any clinical term appears, explain it immediately in plain words, e.g. "gum disease (gingivitis)." Use the glossary below where it applies. Never use an abbreviation without spelling it out in full at first use.
 - Do not replace a specific tooth code (e.g. "UR1"), treatment name (e.g. "composite veneer," "root canal treatment"), or diagnosis with a vague substitute — only simplify genuine jargon, not clinical specifics.
-- Use short sentences and short paragraphs throughout, and bullet points wherever a list reads more clearly than a sentence.
+- Use short sentences joined into short paragraphs everywhere except the treatment options, which are bulleted. Do not use bullet points or numbered lists in any other section.
 - Keep the full letter under {word_limit} words.
 - Tone: warm, professional, reassuring — never alarming, never clinical or cold.
 
@@ -227,6 +258,7 @@ Before finalizing, silently confirm:
 - Every price/fee stated in the source appears in the letter, exactly as written.
 - Every section present has a "## <Section name>" heading, following the Step 3 structure and order: Examination Findings, Discussion, Treatment Options, Next Steps, Recommendations, Homecare Advice. Sections the notes give no content for are absent entirely — none has been padded with invented content.
 - No section says there is nothing to report. If a section would have contained a line like "(There is no home-care advice recorded.)" or "None recorded.", that whole section — heading included — has been deleted instead.
+- Count the treatment options first, then check the bullets against that count. TWO OR MORE options: bullet points appear inside the Treatment Options section and nowhere else. EXACTLY ONE treatment path: the letter contains NO bullet points at all, and the treatment sits in paragraphs under "## Treatment Recommended". If you bulleted a single treatment path, rewrite it as paragraphs.
 - If multiple options were present in the source, they sit under "## Treatment Options", and each has its own "### Option N: ..." sub-heading — three hash characters, not bold text and not a plain sentence.
 - Every option states its cost on its own line, exactly as the notes give it, and the price sits under the option it belongs to.
 - Within each option, re-read every tooth code you wrote: no tooth appears under two different treatments, and each one matches the tooth map from Step 1. If a tooth appears twice in the same option, you have mistaken a flat "teeth involved" list for a treatment list — fix it.
@@ -264,10 +296,16 @@ Additional notes:
 
 `{word_limit}` is filled in by `ConsentLetterGenerator._compute_word_limit()`:
 
-- Base case: `400` words (per the project spec's "under 400 words").
-- Multiple options detected in `patient_notes` (via `_has_multiple_options`, a regex check for `1)`/`2)`-style enumerations or `option 1`/`option 2` wording): `round(400 * 1.3)` = `520` words.
+- Base case: `550` words.
+- Multiple options detected in `patient_notes` (via `_has_multiple_options`, a regex check for `1)`/`2)`-style enumerations or `option 1`/`option 2` wording): `round(550 * 1.3)` = `715` words.
 
-The prompt only ever sees a literal number (e.g. "under 520 words") — it is never told to calculate a percentage increase itself, per the dentist's explicit instruction.
+The base was raised from the project spec's original 400 once the letter gained
+its full section structure (findings, discussion, options, next steps,
+recommendations, homecare); letters were already running 395-450 words with only
+some of those sections present, and a limit that binds makes the model drop
+content rather than tighten prose.
+
+The prompt only ever sees a literal number (e.g. "under 715 words") — it is never told to calculate a percentage increase itself, per the dentist's explicit instruction.
 
 ## Known limitation
 
